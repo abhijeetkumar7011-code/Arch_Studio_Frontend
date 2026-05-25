@@ -1,26 +1,63 @@
 @import "tailwindcss";
 
+html {
+  scroll-behavior: smooth;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --background: #050505;
+  --foreground: #ffffff;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
+  font-family: var(--font-outfit), sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.container-custom {
+  width: 100%;
+  max-width: 1360px;
+  margin-inline: auto;
+  padding-inline: 32px;
+}
+
+.section-padding {
+  padding-top: 120px;
+  padding-bottom: 120px;
+}
+
+.heading-xl {
+  font-size: clamp(4rem, 9vw, 8rem);
+  line-height: 0.9;
+  letter-spacing: -0.06em;
+  font-family: var(--font-playfair), serif;
+  font-weight: 700;
+}
+
+.heading-lg {
+  font-size: clamp(3rem, 6vw, 5rem);
+  line-height: 0.95;
+  letter-spacing: -0.05em;
+  font-family: var(--font-playfair), serif;
+  font-weight: 700;
+}
+
+.grain-overlay::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.03;
+  z-index: 9999;
+  background-image: radial-gradient(
+    rgba(255,255,255,0.05) 1px,
+    transparent 1px
+  );
+  background-size: 4px 4px;
 }
