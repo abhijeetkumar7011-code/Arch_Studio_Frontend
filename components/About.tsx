@@ -6,7 +6,7 @@ export default function About() {
   return (
     <section className="py-20 md:py-32 bg-[#0f0f0f] text-white">
       <div className="max-w-7xl mx-auto px-6 md:px-12 grid md:grid-cols-2 gap-12 md:gap-20 items-center">
-        
+
         <motion.div
           initial={{ opacity: 0, x: -40 }}
           whileInView={{ opacity: 1, x: 0 }}
@@ -14,14 +14,15 @@ export default function About() {
           viewport={{ once: true }}
           className="space-y-6"
         >
-          <p className="uppercase tracking-[0.3em] text-xs md:text-sm text-neutral-400">
+          <p className="uppercase tracking-[0.35em] text-xs text-[#d6c6b8] mb-4">
             About Studio
           </p>
-
-          <h2 className="text-3xl md:text-5xl font-bold uppercase tracking-tight leading-tight">
-            We Shape
-            <br />
-            Modern Living
+          <h2
+            className="text-4xl md:text-6xl font-bold uppercase tracking-tight leading-none"
+            style={{ fontFamily: "var(--font-playfair), serif" }}
+          >
+            We Shape<br />
+            <span className="text-white/20">Modern Living</span>
           </h2>
 
           <div className="space-y-4 text-neutral-400 leading-relaxed text-base md:text-lg">

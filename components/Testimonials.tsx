@@ -13,13 +13,23 @@ export default function Testimonials() {
     <section className="py-20 md:py-32 bg-[#0f0f0f] text-white">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         
-        <div className="mb-16 md:mb-24">
-          <p className="uppercase tracking-[0.3em] text-xs md:text-sm text-neutral-400 mb-4">
-            Testimonials
-          </p>
-          <h2 className="text-3xl md:text-5xl font-bold uppercase tracking-tight">
-            Client Words
-          </h2>
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 md:mb-20 gap-8">
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+          >
+            <p className="uppercase tracking-[0.35em] text-xs text-[#d6c6b8] mb-4">
+              Testimonials
+            </p>
+            <h2
+              className="text-4xl md:text-6xl font-bold uppercase tracking-tight leading-none"
+              style={{ fontFamily: "var(--font-playfair), serif" }}
+            >
+              Client Words<br />
+            </h2>
+          </motion.div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">

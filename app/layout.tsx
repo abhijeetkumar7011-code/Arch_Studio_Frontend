@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import CustomCursor from "@/components/CustomCursor";
 
 import { Playfair_Display, Outfit } from "next/font/google";
 
@@ -39,7 +40,10 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className={`${playfair.variable} ${outfit.variable} grain-overlay`}>{children}</body>
+      <body className={`${playfair.variable} ${outfit.variable} grain-overlay`}>
+        <CustomCursor /> 
+        {children}
+      </body>
     </html>
   );
 }

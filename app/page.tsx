@@ -13,7 +13,7 @@
   import SmoothScroll from "../components/SmoothScroll";
   import ContactModal from "../components/ContactModal";
   import Loader from "../components/Loader";
-  import CustomCursor from "../components/CustomCursor";
+  // import CustomCursor from "../components/CustomCursor";
 
   export default function Home() {
     const [isContactOpen, setIsContactOpen] = useState(false);
@@ -25,7 +25,7 @@
       <main className="bg-black relative min-h-screen selection:bg-[#d6c6b8] selection:text-black">
         <SmoothScroll />
         <Loader />
-        <CustomCursor />
+        {/* <CustomCursor /> */}
 
         <Navbar onContactClick={openContact} />
         

@@ -11,18 +11,37 @@ export default function Contact() {
 
       <div className="container-custom relative z-10">
         <div className="mb-16 max-w-3xl">
-          <div className="mb-5 inline-flex rounded-full border border-white/10 bg-white/5 px-5 py-2 text-sm uppercase tracking-[0.2em] backdrop-blur-xl">
+          {/* <div className="mb-5 inline-flex rounded-full border border-white/10 bg-white/5 px-5 py-2 text-sm uppercase tracking-[0.2em] backdrop-blur-xl">
             Let’s Build Something Iconic
-          </div>
+          </div> */}
 
-          <h2 className="heading-lg uppercase leading-none">
+          {/* <h2 className="heading-lg uppercase leading-none">
             Start Your
             <span className="block text-white/40">Dream Project</span>
           </h2>
 
           <p className="mt-6 text-white/60 text-lg leading-relaxed max-w-2xl">
             Whether it’s a residence, commercial masterpiece, or futuristic interior experience, we transform ambitious ideas into architectural reality.
-          </p>
+          </p> */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+          >
+            {/* <div className="mb-5 inline-flex rounded-full border border-white/10 bg-white/5 px-5 py-2 text-sm uppercase tracking-[0.2em] backdrop-blur-xl">
+            </div> */}
+            <p className="uppercase tracking-[0.35em] text-xs text-[#d6c6b8] mb-4">
+              Let’s Build Something Iconic
+            </p>
+            <h2
+              className="text-4xl md:text-6xl font-bold uppercase tracking-tight leading-none"
+              style={{ fontFamily: "var(--font-playfair), serif" }}
+            >
+              Start Your<br />
+              <span className="text-white/20">Dream Project</span>
+            </h2>
+          </motion.div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-10 items-start">
@@ -71,12 +90,12 @@ export default function Contact() {
               {
                 icon: <Phone className="h-5 w-5" />,
                 title: "Call Us",
-                value: "+91 98765 43210",
+                value: "+91 95688 54950",
               },
               {
                 icon: <Mail className="h-5 w-5" />,
                 title: "Email",
-                value: "studio@architect.com",
+                value: "abhijeetkumar7011@gmail.com",
               },
               {
                 icon: <MapPin className="h-5 w-5" />,
