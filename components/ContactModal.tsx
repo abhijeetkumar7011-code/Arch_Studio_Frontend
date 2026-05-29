@@ -111,7 +111,7 @@ export default function ContactModal({ isOpen, onClose }: { isOpen: boolean; onC
                       </p>
 
                       <p className="text-sm">
-                        +91 98765 43210
+                        +91 95688 54950
                       </p>
                     </div>
                   </div>

@@ -2,79 +2,29 @@
 
 import { projects } from "@/data/projects";
 import { notFound } from "next/navigation";
-import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { use, useState, useRef, useCallback } from "react";
+import { use, useState } from "react";
 import Footer from "@/components/Footer";
 
 type Props = { params: Promise<{ slug: string }> };
 
 /* ══════════════════════════════════════════════
-   HONEYCOMB LAYOUT ENGINE
-   
-   Flat-top hex grid. Each hex = 120px radius.
-   Layout places images in a grid pattern where:
-   - Cell 0 (first image) = 2× size, top-left anchor
-   - Cells 1-6 = regular size, arranged honeycomb
-   
-   We use SVG clipPath + foreignObject so images
-   tile perfectly edge-to-edge like real honeycombs.
+   HEX GALLERY — matches screenshot exactly
+   1 large hero hex (left) + 5 small hexes (right)
+   Flat-top geometry, gap between hexes via spacing
 ══════════════════════════════════════════════ */
 
-const HEX_CLIP = "polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)";
-
-// Compute flat-top hex positions for N images
-// Returns {x, y, r} — center and radius for each cell
-function hexLayout(count: number) {
-  // Flat-top hex geometry
-  // r = hex radius (center to vertex)
-  const R = 110; // regular hex radius px
-  const R2 = 196; // big hex radius (first image)
-  const W = R * Math.sqrt(3);   // hex width
-  const H = R * 2;              // hex height
-  const W2 = R2 * Math.sqrt(3);
-  const H2 = R2 * 2;
-
-  // axial→pixel for flat-top hex
-  // col spacing = W, row spacing = H*0.75, alternating col offset
-  const cells: { x: number; y: number; r: number; id: number }[] = [];
-
-  if (count === 0) return cells;
-
-  // First image — big hex at 0,0
-  cells.push({ x: W2 / 2, y: H2 / 2, r: R2, id: 0 });
-
-  if (count === 1) return cells;
-
-  // Regular hexes arranged around and to the right of big hex
-  // Pre-computed positions that tile naturally
-  const offsets = [
-    { col: 2, row: 0 },   // right of big
-    { col: 3, row: 0 },
-    { col: 2, row: 1 },
-    { col: 3, row: 1 },
-    { col: 4, row: 0 },
-    { col: 4, row: 1 },
-    { col: 5, row: 0 },
-    { col: 5, row: 1 },
-    { col: 6, row: 0 },
-    { col: 6, row: 1 },
-  ];
-
-  // Flat-top axial → pixel
-  // x = W * col + (row%2)*W/2
-  // y = H * 0.75 * row
-  for (let i = 0; i < Math.min(count - 1, offsets.length); i++) {
-    const { col, row } = offsets[i];
-    const x = W * col + (row % 2 === 0 ? 0 : W / 2) + W / 2;
-    const y = H * 0.75 * row + R;
-    cells.push({ x, y, r: R, id: i + 1 });
-  }
-
-  return cells;
+function flatHexPts(cx: number, cy: number, R: number): string {
+  return [0, 60, 120, 180, 240, 300]
+    .map((a) => {
+      const rad = (a * Math.PI) / 180;
+      return `${(cx + R * Math.cos(rad)).toFixed(2)},${(cy + R * Math.sin(rad)).toFixed(2)}`;
+    })
+    .join(" ");
 }
 
-function HoneycombGallery({
+function HexGallery({
   images,
   onOpen,
 }: {
@@ -82,207 +32,176 @@ function HoneycombGallery({
   onOpen: (i: number) => void;
 }) {
   const [hovered, setHovered] = useState<number | null>(null);
-  const cells = hexLayout(images.length);
+  const imgs = images.slice(0, 6);
+  if (imgs.length === 0) return null;
 
-  if (cells.length === 0) return null;
+  // Large hex geometry
+  const L_CX = 230, L_CY = 255, L_R = 195;
 
-  // SVG canvas size
-  const maxX = Math.max(...cells.map((c) => c.x + c.r * 1.05));
-  const maxY = Math.max(...cells.map((c) => c.y + c.r * 1.05));
-  const svgW = maxX + 20;
-  const svgH = maxY + 20;
+  // Small hex centers & radius — 2 rows, staggered to match screenshot
+  const SM_R = 118;
+  const smalls = [
+    { cx: 530, cy: 148 },
+    { cx: 736, cy: 148 },
+    { cx: 427, cy: 344 },
+    { cx: 633, cy: 344 },
+    { cx: 839, cy: 344 },
+  ];
+
+  const SVG_W = 900;
+  const SVG_H = 520;
 
   return (
-    <div className="w-full overflow-x-auto overflow-y-visible scrollbar-none pb-4"
-      style={{ scrollbarWidth: "none" }}>
-      <div style={{ width: svgW, minWidth: svgW }}>
-        <svg
-          viewBox={`0 0 ${svgW} ${svgH}`}
-          width={svgW}
-          height={svgH}
-          xmlns="http://www.w3.org/2000/svg"
-          style={{ overflow: "visible" }}
-        >
-          <defs>
-            {cells.map((cell) => {
-              const w = cell.r * Math.sqrt(3);
-              const h = cell.r * 2;
-              // Flat-top hex points (centered at 0,0)
-              const pts = [
-                [w / 2, 0],
-                [w, h * 0.25],
-                [w, h * 0.75],
-                [w / 2, h],
-                [0, h * 0.75],
-                [0, h * 0.25],
-              ]
-                .map(([px, py]) => `${px - w / 2},${py - h / 2}`)
-                .join(" ");
+    <div className="w-full overflow-x-auto" style={{ scrollbarWidth: "none" }}>
+      <svg
+        viewBox={`0 0 ${SVG_W} ${SVG_H}`}
+        width={SVG_W}
+        height={SVG_H}
+        xmlns="http://www.w3.org/2000/svg"
+        style={{ display: "block", borderRadius: "16px" }}
+      >
+        <defs>
+          {/* Large hex clip */}
+          <clipPath id="pgc-clip-0">
+            <polygon points={flatHexPts(L_CX, L_CY, L_R)} />
+          </clipPath>
+          {/* Small hex clips */}
+          {smalls.map((s, i) => (
+            <clipPath key={i} id={`pgc-clip-${i + 1}`}>
+              <polygon points={flatHexPts(s.cx, s.cy, SM_R)} />
+            </clipPath>
+          ))}
+          {/* Right fade gradient */}
+          <linearGradient id="pgc-rfade" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="#080808" stopOpacity="0" />
+            <stop offset="100%" stopColor="#080808" stopOpacity="1" />
+          </linearGradient>
+        </defs>
 
-              return (
-                <clipPath key={`clip-${cell.id}`} id={`hex-clip-${cell.id}`}>
-                  <polygon points={pts} transform={`translate(${cell.x},${cell.y})`} />
-                </clipPath>
-              );
-            })}
-          </defs>
-
-          {/* Draw connector lines between adjacent hexes */}
-          {cells.slice(1).map((cell, i) => {
-            const prev = cells[i]; // connect to previous
-            return (
-              <line
-                key={`line-${i}`}
-                x1={prev.x} y1={prev.y}
-                x2={cell.x} y2={cell.y}
-                stroke="rgba(255,255,255,0.06)"
-                strokeWidth="1"
-                strokeDasharray="4 6"
+        {/* ── Large hex ── */}
+        {imgs[0] && (() => {
+          const w = L_R * Math.sqrt(3);
+          const h = L_R * 2;
+          const isH = hovered === 0;
+          return (
+            <g
+              style={{ cursor: "pointer" }}
+              onMouseEnter={() => setHovered(0)}
+              onMouseLeave={() => setHovered(null)}
+              onClick={() => onOpen(0)}
+            >
+              <image
+                href={imgs[0]}
+                x={L_CX - w / 2} y={L_CY - h / 2}
+                width={w} height={h}
+                clipPath="url(#pgc-clip-0)"
+                preserveAspectRatio="xMidYMid slice"
+                style={{
+                  filter: isH ? "brightness(1.15) saturate(1.05)" : "brightness(0.82)",
+                  transition: "filter 0.4s ease",
+                }}
               />
-            );
-          })}
+              {/* Dark overlay */}
+              <polygon
+                points={flatHexPts(L_CX, L_CY, L_R)}
+                fill={isH ? "rgba(0,0,0,0.05)" : "rgba(0,0,0,0.25)"}
+                style={{ transition: "fill 0.4s ease", pointerEvents: "none" }}
+              />
+              {/* Border */}
+              <polygon
+                points={flatHexPts(L_CX, L_CY, L_R + 2)}
+                fill="none"
+                stroke={isH ? "rgba(214,198,184,0.55)" : "rgba(255,255,255,0.1)"}
+                strokeWidth={isH ? 2 : 1.5}
+                style={{ transition: "all 0.3s ease" }}
+              />
+              {/* Hover icon */}
+              {isH && (
+                <text x={L_CX} y={L_CY + 12} textAnchor="middle"
+                  fill="rgba(255,255,255,0.9)" fontSize={32}
+                  style={{ pointerEvents: "none", userSelect: "none" }}>⤢</text>
+              )}
+            </g>
+          );
+        })()}
 
-          {/* Hexes */}
-          {cells.map((cell) => {
-            const isFirst = cell.id === 0;
-            const isHovered = hovered === cell.id;
-            const w = cell.r * Math.sqrt(3);
-            const h = cell.r * 2;
-            const img = images[cell.id];
-            if (!img) return null;
+        {/* ── Small hexes ── */}
+        {smalls.map((s, i) => {
+          const idx = i + 1;
+          const img = imgs[idx];
+          if (!img) return null;
+          const w = SM_R * Math.sqrt(3);
+          const h = SM_R * 2;
+          const isH = hovered === idx;
+          return (
+            <g
+              key={idx}
+              style={{ cursor: "pointer" }}
+              onMouseEnter={() => setHovered(idx)}
+              onMouseLeave={() => setHovered(null)}
+              onClick={() => onOpen(idx)}
+            >
+              <image
+                href={img}
+                x={s.cx - w / 2} y={s.cy - h / 2}
+                width={w} height={h}
+                clipPath={`url(#pgc-clip-${idx})`}
+                preserveAspectRatio="xMidYMid slice"
+                style={{
+                  filter: isH ? "brightness(1.15) saturate(1.05)" : "brightness(0.78)",
+                  transition: "filter 0.4s ease",
+                }}
+              />
+              {/* Dark overlay */}
+              <polygon
+                points={flatHexPts(s.cx, s.cy, SM_R)}
+                fill={isH ? "rgba(0,0,0,0.05)" : "rgba(0,0,0,0.3)"}
+                style={{ transition: "fill 0.4s ease", pointerEvents: "none" }}
+              />
+              {/* Border */}
+              <polygon
+                points={flatHexPts(s.cx, s.cy, SM_R + 2)}
+                fill="none"
+                stroke={isH ? "rgba(214,198,184,0.55)" : "rgba(255,255,255,0.1)"}
+                strokeWidth={isH ? 2 : 1.5}
+                style={{ transition: "all 0.3s ease" }}
+              />
+              {/* Index number or expand icon */}
+              {isH ? (
+                <text x={s.cx} y={s.cy + 8} textAnchor="middle"
+                  fill="rgba(255,255,255,0.9)" fontSize={22}
+                  style={{ pointerEvents: "none", userSelect: "none" }}>⤢</text>
+              ) : (
+                <text x={s.cx} y={s.cy + 5} textAnchor="middle"
+                  fill="rgba(255,255,255,0.2)" fontSize={11} fontFamily="monospace"
+                  style={{ pointerEvents: "none", userSelect: "none" }}>
+                  {String(idx).padStart(2, "0")}
+                </text>
+              )}
+            </g>
+          );
+        })}
 
-            return (
-              <g
-                key={`hex-${cell.id}`}
-                style={{ cursor: "pointer" }}
-                onMouseEnter={() => setHovered(cell.id)}
-                onMouseLeave={() => setHovered(null)}
-                onClick={() => onOpen(cell.id)}
-              >
-                {/* Glow behind on hover */}
-                {isHovered && (
-                  <ellipse
-                    cx={cell.x} cy={cell.y}
-                    rx={cell.r * 0.85} ry={cell.r * 0.7}
-                    fill="rgba(214,198,184,0.12)"
-                    filter="url(#glow)"
-                  />
-                )}
-
-                {/* Border hex (slightly larger) */}
-                <polygon
-                  points={(() => {
-                    const rr = cell.r + (isHovered ? 3 : 1);
-                    const ww = rr * Math.sqrt(3);
-                    const hh = rr * 2;
-                    return [
-                      [ww / 2, 0],
-                      [ww, hh * 0.25],
-                      [ww, hh * 0.75],
-                      [ww / 2, hh],
-                      [0, hh * 0.75],
-                      [0, hh * 0.25],
-                    ]
-                      .map(([px, py]) => `${px - ww / 2 + cell.x},${py - hh / 2 + cell.y}`)
-                      .join(" ");
-                  })()}
-                  fill="none"
-                  stroke={isHovered ? "rgba(214,198,184,0.5)" : "rgba(255,255,255,0.08)"}
-                  strokeWidth={isHovered ? 1.5 : 1}
-                  style={{ transition: "all 0.3s" }}
-                />
-
-                {/* Image clipped to hex */}
-                <image
-                  href={img}
-                  x={cell.x - w / 2}
-                  y={cell.y - h / 2}
-                  width={w}
-                  height={h}
-                  preserveAspectRatio="xMidYMid slice"
-                  clipPath={`url(#hex-clip-${cell.id})`}
-                  style={{
-                    filter: isHovered ? "brightness(1.15) saturate(1.1)" : isFirst ? "brightness(0.95)" : "brightness(0.78)",
-                    transition: "filter 0.4s ease",
-                    transform: isHovered ? `scale(1.06)` : "scale(1)",
-                    transformOrigin: `${cell.x}px ${cell.y}px`,
-                    transformBox: "fill-box",
-                  }}
-                />
-
-                {/* Dark overlay (lighten on hover) */}
-                <polygon
-                  points={(() => {
-                    const pts2 = [
-                      [w / 2, 0],
-                      [w, h * 0.25],
-                      [w, h * 0.75],
-                      [w / 2, h],
-                      [0, h * 0.75],
-                      [0, h * 0.25],
-                    ]
-                      .map(([px, py]) => `${px - w / 2 + cell.x},${py - h / 2 + cell.y}`)
-                      .join(" ");
-                    return pts2;
-                  })()}
-                  fill={isHovered ? "rgba(0,0,0,0.08)" : "rgba(0,0,0,0.32)"}
-                  style={{ transition: "fill 0.4s ease", pointerEvents: "none" }}
-                />
-
-                {/* Index number + expand icon on hover */}
-                {isHovered ? (
-                  <text
-                    x={cell.x} y={cell.y + 6}
-                    textAnchor="middle"
-                    fill="rgba(255,255,255,0.9)"
-                    fontSize={isFirst ? 28 : 20}
-                    fontFamily="sans-serif"
-                    style={{ pointerEvents: "none", userSelect: "none" }}
-                  >
-                    ⤢
-                  </text>
-                ) : !isFirst ? (
-                  <text
-                    x={cell.x} y={cell.y + 5}
-                    textAnchor="middle"
-                    fill="rgba(255,255,255,0.22)"
-                    fontSize={11}
-                    fontFamily="monospace"
-                    style={{ pointerEvents: "none", userSelect: "none" }}
-                  >
-                    {String(cell.id).padStart(2, "0")}
-                  </text>
-                ) : (
-                  <text
-                    x={cell.x} y={cell.y - 10}
-                    textAnchor="middle"
-                    fill="rgba(214,198,184,0.5)"
-                    fontSize={10}
-                    fontFamily="monospace"
-                    letterSpacing="3"
-                    style={{ pointerEvents: "none", userSelect: "none" }}
-                  >
-                    HERO
-                  </text>
-                )}
-              </g>
-            );
-          })}
-
-          {/* Glow filter def */}
-          <defs>
-            <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-              <feGaussianBlur stdDeviation="18" result="blur" />
-            </filter>
-          </defs>
-        </svg>
-      </div>
+        {/* Right edge fade */}
+        <rect x={820} y={0} width={80} height={SVG_H}
+          fill="url(#pgc-rfade)" style={{ pointerEvents: "none" }} />
+      </svg>
     </div>
   );
 }
 
-/* ── Lightbox ── */
-function Lightbox({ images, startIndex, onClose }: { images: string[]; startIndex: number; onClose: () => void }) {
+/* ══════════════════════════════════════════════
+   LIGHTBOX
+══════════════════════════════════════════════ */
+function Lightbox({
+  images,
+  startIndex,
+  onClose,
+}: {
+  images: string[];
+  startIndex: number;
+  onClose: () => void;
+}) {
   const [current, setCurrent] = useState(startIndex);
 
   return (
@@ -330,7 +249,9 @@ function Lightbox({ images, startIndex, onClose }: { images: string[]; startInde
   );
 }
 
-/* ── Page ── */
+/* ══════════════════════════════════════════════
+   PAGE
+══════════════════════════════════════════════ */
 export default function ProjectPage({ params }: Props) {
   const { slug } = use(params);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
@@ -349,7 +270,7 @@ export default function ProjectPage({ params }: Props) {
 
       {/* Back Nav */}
       <div className="fixed top-8 left-8 z-50">
-        <Link href="/#projects">
+        <Link href="/projects">
           <motion.div
             initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.3, duration: 0.6 }}
@@ -376,7 +297,8 @@ export default function ProjectPage({ params }: Props) {
               <span key={tag} className="rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-xs uppercase tracking-[0.2em] text-white/60 backdrop-blur-sm">{tag}</span>
             ))}
           </motion.div>
-          <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }} className="uppercase tracking-[0.35em] text-sm text-[#d6c6b8] mb-5">
+          <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}
+            className="uppercase tracking-[0.35em] text-sm text-[#d6c6b8] mb-5">
             {project.location} · {project.category}
           </motion.p>
           <motion.h1
@@ -416,9 +338,9 @@ export default function ProjectPage({ params }: Props) {
         </motion.div>
       </section>
 
-      {/* ═══════════════════════════════════════
-          HONEYCOMB GALLERY
-      ═══════════════════════════════════════ */}
+      {/* ══════════════════════════════════════
+          HEX GALLERY
+      ══════════════════════════════════════ */}
       {gallery.length > 0 && (
         <section className="pb-28">
           {/* Section header */}
@@ -443,7 +365,7 @@ export default function ProjectPage({ params }: Props) {
             </motion.div>
           </div>
 
-          {/* Honeycomb canvas */}
+          {/* Hex Gallery canvas */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -451,14 +373,9 @@ export default function ProjectPage({ params }: Props) {
             viewport={{ once: true }}
             className="px-8 md:px-20"
           >
-            {/* Fade edges */}
-            <div className="relative">
-              <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-24 z-10 bg-gradient-to-l from-[#080808] to-transparent" />
-              <HoneycombGallery images={gallery} onOpen={setLightboxIndex} />
-            </div>
+            <HexGallery images={gallery} onOpen={setLightboxIndex} />
           </motion.div>
 
-          {/* Thin decorative line below */}
           <div className="max-w-7xl mx-auto px-8 md:px-20 mt-12">
             <div className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
           </div>
@@ -474,7 +391,7 @@ export default function ProjectPage({ params }: Props) {
               <p className="text-xs uppercase tracking-[0.4em] text-[#d6c6b8] mb-3">Continue Exploring</p>
               <h2 className="text-3xl md:text-5xl font-bold uppercase tracking-tight" style={{ fontFamily: "var(--font-playfair), serif" }}>More Projects</h2>
             </div>
-            <Link href="/#projects">
+            <Link href="/projects">
               <div className="hidden md:flex items-center gap-3 rounded-full border border-white/15 px-6 py-3 text-xs uppercase tracking-[0.2em] text-white/50 hover:text-white hover:border-white/40 transition-all duration-300 group">
                 View All <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
               </div>
