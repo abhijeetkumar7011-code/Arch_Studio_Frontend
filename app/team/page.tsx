@@ -17,7 +17,7 @@ const TEAM = [
     philosophy: "I believe the best architecture is the kind you feel before you understand it.",
     awards: ["Aga Khan Award Nominee 2016", "AD50 India 2021", "Architectural Record Vanguard 2023"],
     projects: ["Modern Villa", "Sky Pavilion", "Forest Retreat"],
-    image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=1887&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1544168190-79c17527004f?w=600&auto=format&fit=crop",
     accent: "#d6c6b8",
   },
   {
@@ -56,7 +56,7 @@ const TEAM = [
     philosophy: "Context is not a constraint — it's the source of every original idea.",
     awards: ["RIBA International Award 2022", "Gulf Architect of the Year 2024"],
     projects: ["Sky Pavilion"],
-    image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=1961&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?w=600&auto=format&fit=crop",
     accent: "#cfc0ac",
   },
   {
@@ -186,7 +186,7 @@ export default function TeamPage() {
                   <img
                     src={member.image}
                     alt={member.name}
-                    className="w-full h-full object-cover object-top transition duration-700 group-hover:scale-105 brightness-75 group-hover:brightness-90"
+                    className="w-full h-full object-cover object-top transition duration-700 group-hover:scale-110 brightness-75 group-hover:brightness-90"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#080808] via-black/20 to-transparent" />
 

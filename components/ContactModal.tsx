@@ -18,7 +18,20 @@ export default function ContactModal({ isOpen, onClose }: { isOpen: boolean; onC
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
-            className="relative w-full max-w-5xl max-h-[90vh] bg-[#0a0a0a] rounded-[40px] border border-white/10 shadow-2xl overflow-hidden grid lg:grid-cols-2"
+            className="
+              relative
+              w-full
+              max-w-5xl
+              h-[90vh]
+              bg-[#0a0a0a]
+              rounded-[40px]
+              border
+              border-white/10
+              shadow-2xl
+              overflow-hidden
+              grid
+              lg:grid-cols-2
+            "
           >
             {/* Close Button */}
             <button
@@ -137,7 +150,7 @@ export default function ContactModal({ isOpen, onClose }: { isOpen: boolean; onC
             </div>
 
             {/* RIGHT SIDE: Form (Scrollable without visible bar) */}
-            <div className="flex flex-col overflow-y-auto scrollbar-hide p-8 md:p-12">
+            <div className=" flex flex-col h-full overflow-y-auto p-8 md:p-12 custom-scrollbar ">
               <div className="flex-1">
                 {/* <p className="text-xs uppercase tracking-[0.3em] text-[#d6c6b8] mb-2">Get in Touch</p>
                 <h3 className="text-3xl font-bold mb-8">Start Your Project</h3> */}
@@ -161,27 +174,15 @@ export default function ContactModal({ isOpen, onClose }: { isOpen: boolean; onC
                 <form
                   action="https://formsubmit.co/abhijeetkumar7011@gmail.com"
                   method="POST"
-                  className="space-y-4 mt-12"
+                  className="space-y-4 mt-5"
                 >
 
                   {/* Hidden */}
-                  <input
-                    type="hidden"
-                    name="_subject"
-                    value="New Architecture Inquiry"
-                  />
+                  <input type="hidden" name="_subject" value="New Architecture Inquiry" />
 
-                  <input
-                    type="hidden"
-                    name="_template"
-                    value="table"
-                  />
+                  <input type="hidden" name="_template" value="table" />
 
-                  <input
-                    type="hidden"
-                    name="_captcha"
-                    value="false"
-                  />
+                  <input type="hidden" name="_captcha" value="false" />
 
                   {/* Name */}
                   <div>

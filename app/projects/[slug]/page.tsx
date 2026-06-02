@@ -6,189 +6,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { use, useState } from "react";
 import Footer from "@/components/Footer";
+import HexGallery from "@/components/HexGallery";
+import SnapShotGallery from "@/components/SnapShotGallery";
 
 type Props = { params: Promise<{ slug: string }> };
 
-/* ══════════════════════════════════════════════
-   HEX GALLERY — matches screenshot exactly
-   1 large hero hex (left) + 5 small hexes (right)
-   Flat-top geometry, gap between hexes via spacing
-══════════════════════════════════════════════ */
 
-function flatHexPts(cx: number, cy: number, R: number): string {
-  return [0, 60, 120, 180, 240, 300]
-    .map((a) => {
-      const rad = (a * Math.PI) / 180;
-      return `${(cx + R * Math.cos(rad)).toFixed(2)},${(cy + R * Math.sin(rad)).toFixed(2)}`;
-    })
-    .join(" ");
-}
-
-function HexGallery({
-  images,
-  onOpen,
-}: {
-  images: string[];
-  onOpen: (i: number) => void;
-}) {
-  const [hovered, setHovered] = useState<number | null>(null);
-  const imgs = images.slice(0, 6);
-  if (imgs.length === 0) return null;
-
-  // Large hex geometry
-  const L_CX = 230, L_CY = 255, L_R = 195;
-
-  // Small hex centers & radius — 2 rows, staggered to match screenshot
-  const SM_R = 118;
-  const smalls = [
-    { cx: 530, cy: 148 },
-    { cx: 736, cy: 148 },
-    { cx: 427, cy: 344 },
-    { cx: 633, cy: 344 },
-    { cx: 839, cy: 344 },
-  ];
-
-  const SVG_W = 900;
-  const SVG_H = 520;
-
-  return (
-    <div className="w-full overflow-x-auto" style={{ scrollbarWidth: "none" }}>
-      <svg
-        viewBox={`0 0 ${SVG_W} ${SVG_H}`}
-        width={SVG_W}
-        height={SVG_H}
-        xmlns="http://www.w3.org/2000/svg"
-        style={{ display: "block", borderRadius: "16px" }}
-      >
-        <defs>
-          {/* Large hex clip */}
-          <clipPath id="pgc-clip-0">
-            <polygon points={flatHexPts(L_CX, L_CY, L_R)} />
-          </clipPath>
-          {/* Small hex clips */}
-          {smalls.map((s, i) => (
-            <clipPath key={i} id={`pgc-clip-${i + 1}`}>
-              <polygon points={flatHexPts(s.cx, s.cy, SM_R)} />
-            </clipPath>
-          ))}
-          {/* Right fade gradient */}
-          <linearGradient id="pgc-rfade" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="#080808" stopOpacity="0" />
-            <stop offset="100%" stopColor="#080808" stopOpacity="1" />
-          </linearGradient>
-        </defs>
-
-        {/* ── Large hex ── */}
-        {imgs[0] && (() => {
-          const w = L_R * Math.sqrt(3);
-          const h = L_R * 2;
-          const isH = hovered === 0;
-          return (
-            <g
-              style={{ cursor: "pointer" }}
-              onMouseEnter={() => setHovered(0)}
-              onMouseLeave={() => setHovered(null)}
-              onClick={() => onOpen(0)}
-            >
-              <image
-                href={imgs[0]}
-                x={L_CX - w / 2} y={L_CY - h / 2}
-                width={w} height={h}
-                clipPath="url(#pgc-clip-0)"
-                preserveAspectRatio="xMidYMid slice"
-                style={{
-                  filter: isH ? "brightness(1.15) saturate(1.05)" : "brightness(0.82)",
-                  transition: "filter 0.4s ease",
-                }}
-              />
-              {/* Dark overlay */}
-              <polygon
-                points={flatHexPts(L_CX, L_CY, L_R)}
-                fill={isH ? "rgba(0,0,0,0.05)" : "rgba(0,0,0,0.25)"}
-                style={{ transition: "fill 0.4s ease", pointerEvents: "none" }}
-              />
-              {/* Border */}
-              <polygon
-                points={flatHexPts(L_CX, L_CY, L_R + 2)}
-                fill="none"
-                stroke={isH ? "rgba(214,198,184,0.55)" : "rgba(255,255,255,0.1)"}
-                strokeWidth={isH ? 2 : 1.5}
-                style={{ transition: "all 0.3s ease" }}
-              />
-              {/* Hover icon */}
-              {isH && (
-                <text x={L_CX} y={L_CY + 12} textAnchor="middle"
-                  fill="rgba(255,255,255,0.9)" fontSize={32}
-                  style={{ pointerEvents: "none", userSelect: "none" }}>⤢</text>
-              )}
-            </g>
-          );
-        })()}
-
-        {/* ── Small hexes ── */}
-        {smalls.map((s, i) => {
-          const idx = i + 1;
-          const img = imgs[idx];
-          if (!img) return null;
-          const w = SM_R * Math.sqrt(3);
-          const h = SM_R * 2;
-          const isH = hovered === idx;
-          return (
-            <g
-              key={idx}
-              style={{ cursor: "pointer" }}
-              onMouseEnter={() => setHovered(idx)}
-              onMouseLeave={() => setHovered(null)}
-              onClick={() => onOpen(idx)}
-            >
-              <image
-                href={img}
-                x={s.cx - w / 2} y={s.cy - h / 2}
-                width={w} height={h}
-                clipPath={`url(#pgc-clip-${idx})`}
-                preserveAspectRatio="xMidYMid slice"
-                style={{
-                  filter: isH ? "brightness(1.15) saturate(1.05)" : "brightness(0.78)",
-                  transition: "filter 0.4s ease",
-                }}
-              />
-              {/* Dark overlay */}
-              <polygon
-                points={flatHexPts(s.cx, s.cy, SM_R)}
-                fill={isH ? "rgba(0,0,0,0.05)" : "rgba(0,0,0,0.3)"}
-                style={{ transition: "fill 0.4s ease", pointerEvents: "none" }}
-              />
-              {/* Border */}
-              <polygon
-                points={flatHexPts(s.cx, s.cy, SM_R + 2)}
-                fill="none"
-                stroke={isH ? "rgba(214,198,184,0.55)" : "rgba(255,255,255,0.1)"}
-                strokeWidth={isH ? 2 : 1.5}
-                style={{ transition: "all 0.3s ease" }}
-              />
-              {/* Index number or expand icon */}
-              {isH ? (
-                <text x={s.cx} y={s.cy + 8} textAnchor="middle"
-                  fill="rgba(255,255,255,0.9)" fontSize={22}
-                  style={{ pointerEvents: "none", userSelect: "none" }}>⤢</text>
-              ) : (
-                <text x={s.cx} y={s.cy + 5} textAnchor="middle"
-                  fill="rgba(255,255,255,0.2)" fontSize={11} fontFamily="monospace"
-                  style={{ pointerEvents: "none", userSelect: "none" }}>
-                  {String(idx).padStart(2, "0")}
-                </text>
-              )}
-            </g>
-          );
-        })}
-
-        {/* Right edge fade */}
-        <rect x={820} y={0} width={80} height={SVG_H}
-          fill="url(#pgc-rfade)" style={{ pointerEvents: "none" }} />
-      </svg>
-    </div>
-  );
-}
 
 /* ══════════════════════════════════════════════
    LIGHTBOX
@@ -255,6 +78,7 @@ function Lightbox({
 export default function ProjectPage({ params }: Props) {
   const { slug } = use(params);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const [galleryMode, setGalleryMode] = useState<"hex" | "snapshot">("hex");
 
   const project = projects.find((p) => p.slug === slug);
   const projectIndex = projects.findIndex((p) => p.slug === slug);
@@ -266,7 +90,8 @@ export default function ProjectPage({ params }: Props) {
   const gallery = project.gallery ?? [];
 
   return (
-    <main className="bg-[#080808] text-white min-h-screen overflow-x-hidden">
+    // <main className="bg-[#080808] text-white min-h-screen overflow-x-hidden">
+    <main className="bg-[#080808] text-white min-h-screen overflow-x-visible">
 
       {/* Back Nav */}
       <div className="fixed top-8 left-8 z-50">
@@ -338,49 +163,109 @@ export default function ProjectPage({ params }: Props) {
         </motion.div>
       </section>
 
+      {/* GALLERIES SWITCHER */}
+      <div className="max-w-7xl mx-auto px-8 md:px-20 mb-10 mt-20">
+        <div className="flex items-center justify-between flex-wrap gap-4">
+          {/* <span className="text-xs uppercase tracking-[0.35em] text-[#d6c6b8]">View Mode</span> */}
+          <div>
+            <p className="text-xs uppercase tracking-[0.4em] text-[#d6c6b8] mb-3">View Mode</p>
+            {/* Dynamically update based on gallery mode */}
+            <h2 className="text-3xl md:text-5xl font-bold uppercase tracking-tight" style={{ fontFamily: "var(--font-playfair), serif" }}>
+              {galleryMode === "hex" ? "Hex Gallery" : "Snapshot Gallery"}
+            </h2>
+          </div>
+
+          <div className="flex rounded-full bg-white/5 p-1 border border-white/10">
+            <button
+              onClick={() => setGalleryMode("hex")}
+              className={`px-5 py-2 rounded-full text-sm transition-all duration-300 ${
+                galleryMode === "hex" ? "bg-white text-black" : "text-white/50 hover:text-white"
+              }`}
+            >
+              Hex Gallery
+            </button>
+            <button
+              onClick={() => setGalleryMode("snapshot")}
+              className={`px-5 py-2 rounded-full text-sm transition-all duration-300 ${
+                galleryMode === "snapshot" ? "bg-white text-black" : "text-white/50 hover:text-white"
+              }`}
+            >
+              Snapshot Gallery
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* GALLERY RENDERER */}
+      <AnimatePresence mode="wait" >
+        {galleryMode === "hex" ? (
+          <motion.div
+            key="hex"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.5 }}
+            className="max-w-7xl mx-auto px-8 md:px-20"
+          >
+            <HexGallery images={gallery} onOpen={(i) => setLightboxIndex(i)} />
+          </motion.div>
+        ) : (
+          <motion.div
+            key="snapshot"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.5 }}
+            className="max-w-7xl mx-auto px-8 md:px-20"
+          >
+            <SnapShotGallery images={gallery} />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* ══════════════════════════════════════
           HEX GALLERY
       ══════════════════════════════════════ */}
-      {gallery.length > 0 && (
-        <section className="pb-28">
-          {/* Section header */}
-          <div className="max-w-7xl mx-auto px-8 md:px-20 mb-14">
-            <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} viewport={{ once: true }}
-              className="flex items-end justify-between">
-              <div>
-                <p className="text-xs uppercase tracking-[0.45em] text-[#d6c6b8] mb-3">Visual Story</p>
-                <h2 className="text-3xl md:text-5xl font-bold uppercase tracking-tight leading-none"
-                  style={{ fontFamily: "var(--font-playfair), serif" }}>
-                  Gallery
-                </h2>
-              </div>
-              <div className="text-right">
-                <p className="text-xs font-mono text-white/20 uppercase tracking-widest">
-                  {String(gallery.length).padStart(2, "0")} Frames
-                </p>
-                <p className="text-[10px] text-white/15 uppercase tracking-widest mt-1">
-                  Click to expand
-                </p>
-              </div>
-            </motion.div>
-          </div>
-
-          {/* Hex Gallery canvas */}
+      {/* <AnimatePresence mode="wait">
+        {galleryMode === "hex" ? (
           <motion.div
+            key="hex"
             initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-            viewport={{ once: true }}
-            className="px-8 md:px-20"
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.5 }}
           >
-            <HexGallery images={gallery} onOpen={setLightboxIndex} />
+            <HexGallery
+              images={gallery}
+              onOpen={(i) => setLightboxIndex(i)}
+            />
           </motion.div>
+        ) : (
+          <motion.div
+            key="snapshot"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.5 }}
+          >
+            <SnapShotGallery
+              images={gallery}
+              onOpen={(i) => setLightboxIndex(i)}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence> */}
 
-          <div className="max-w-7xl mx-auto px-8 md:px-20 mt-12">
-            <div className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-          </div>
-        </section>
-      )}
+
+      {/* Integrating SnapShot Gallery */}
+      {/* <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+        viewport={{ once: true }}
+      >
+        <SnapShotGallery images={gallery} />
+      </motion.div> */}
 
       {/* MORE PROJECTS */}
       <section className="border-t border-white/[0.07] bg-[#060606]">

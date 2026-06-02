@@ -127,9 +127,26 @@ export default function Navbar({ onContactClick }: { onContactClick?: () => void
 
             <button
               onClick={onContactClick}
-              className="hidden md:block rounded-full border border-white/20 bg-white/5 px-5 py-2 text-xs uppercase tracking-[0.2em] text-white hover:bg-white hover:text-black transition"
+              className="
+                hidden md:flex
+                items-center
+                gap-2
+                rounded-full
+                bg-[#d6c6b8]
+                px-6
+                py-3
+                text-xs
+                uppercase
+                tracking-[0.18em]
+                text-black
+                transition-all
+                duration-300
+                hover:scale-105
+                hover:bg-white
+  "
             >
-              Contact
+              Contact Us
+              <span>→</span>
             </button>
 
             <button onClick={() => setMobileMenuOpen(true)} className="md:hidden text-white">

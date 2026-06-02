@@ -153,4 +153,172 @@ export const projects = [
       { label: "Awards", value: "4 Won" },
     ],
   },
+  {
+    slug: "desert-courtyard",
+    title: "Desert Courtyard",
+    location: "Jodhpur, India",
+    category: "Residential",
+    year: "2024",
+    area: "7,200 sq ft",
+    status: "Completed",
+    description:
+      "A climate-responsive residence organized around shaded courtyards and sandstone walls.",
+    longDescription:
+      "Inspired by traditional desert settlements, Desert Courtyard combines passive cooling strategies with contemporary living. Deep verandas, internal courts, and textured stone surfaces create a comfortable microclimate throughout the year.",
+    tags: ["Courtyard", "Sandstone", "Desert", "Passive Design"],
+    image: "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?q=80&w=2070&auto=format&fit=crop",
+    heroImage: "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?q=80&w=2070&auto=format&fit=crop",
+    gallery: [
+      "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?q=80&w=2070&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1600607687644-c7171b42498f?q=80&w=2070&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1600573472550-8090b5e0745e?q=80&w=2070&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1600585154526-990dced4db0d?q=80&w=2070&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?q=80&w=2070&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1600047509358-9dc75507daeb?q=80&w=2070&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1600121848594-d8644e57abab?q=80&w=2070&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1605146769289-440113cc3d00?q=80&w=2070&auto=format&fit=crop"
+    ],
+    stats: [
+      { label: "Area", value: "7,200 sq ft" },
+      { label: "Year", value: "2024" },
+      { label: "Duration", value: "16 Months" },
+      { label: "Awards", value: "2 Won" },
+    ],
+  },
+
+  {
+    slug: "cliffside-resort",
+    title: "Cliffside Resort",
+    location: "Goa, India",
+    category: "Hospitality",
+    year: "2025",
+    area: "31,000 sq ft",
+    status: "Completed",
+    description:
+      "Luxury hospitality project overlooking the Arabian Sea.",
+    longDescription:
+      "The resort steps down the cliff in terraces, preserving natural contours while maximizing ocean views.",
+    tags: ["Resort", "Coastal", "Luxury", "Hospitality"],
+    image: "https://images.unsplash.com/photo-1573843981267-be1999ff37cd?q=80&w=2070&auto=format&fit=crop",
+    heroImage: "https://images.unsplash.com/photo-1573843981267-be1999ff37cd?q=80&w=2070&auto=format&fit=crop",
+    gallery: [
+      "https://images.unsplash.com/photo-1573843981267-be1999ff37cd?q=80&w=2070&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=2070&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?q=80&w=2070&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=2070&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?q=80&w=2070&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?q=80&w=2070&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=2070&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1570213489059-0aac6626cade?q=80&w=2070&auto=format&fit=crop"
+    ],
+    stats: [
+      { label: "Area", value: "31,000 sq ft" },
+      { label: "Year", value: "2025" },
+      { label: "Suites", value: "48" },
+      { label: "Awards", value: "3 Won" },
+    ],
+  },
+
+  {
+    slug: "tech-campus",
+    title: "Tech Campus",
+    location: "Hyderabad, India",
+    category: "Commercial",
+    year: "2025",
+    area: "120,000 sq ft",
+    status: "Completed",
+    description:
+      "A flexible innovation campus designed for next-generation technology companies.",
+    longDescription:
+      "Organized around landscaped courtyards and collaborative hubs, the campus supports hybrid work culture and rapid growth.",
+    tags: ["Campus", "Innovation", "Workplace", "Technology"],
+    image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop",
+    heroImage: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop",
+    gallery: [
+      "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1497366754035-f200968a6e72?q=80&w=2069&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1497366412874-3415097a27e7?q=80&w=2070&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1497366811353-6870744d04b2?q=80&w=2070&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1497215842964-222b430dc094?q=80&w=2070&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?q=80&w=2070&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=2132&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?q=80&w=2070&auto=format&fit=crop"
+    ],
+    stats: [
+      { label: "Area", value: "120,000 sq ft" },
+      { label: "Year", value: "2025" },
+      { label: "Buildings", value: "6" },
+      { label: "Capacity", value: "2500+" },
+    ],
+  },
+
+  {
+    slug: "urban-penthouse",
+    title: "Urban Penthouse",
+    location: "Delhi, India",
+    category: "Residential",
+    year: "2024",
+    area: "5,200 sq ft",
+    status: "Completed",
+    description:
+      "A sophisticated penthouse overlooking the capital skyline.",
+    longDescription:
+      "The design blends warm materials, panoramic glazing, and curated interiors to create a luxurious city residence.",
+    tags: ["Penthouse", "Luxury", "Urban", "Interiors"],
+    image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?q=80&w=2070&auto=format&fit=crop",
+    heroImage: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?q=80&w=2070&auto=format&fit=crop",
+    gallery: [
+      "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?q=80&w=2070&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1484154218962-a197022b5858?q=80&w=2070&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?q=80&w=2070&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?q=80&w=2070&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?q=80&w=2070&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1484154218962-a197022b5858?q=80&w=2070&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?q=80&w=2070&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?q=80&w=2070&auto=format&fit=crop"
+    ],
+    stats: [
+      { label: "Area", value: "5,200 sq ft" },
+      { label: "Year", value: "2024" },
+      { label: "Level", value: "32nd Floor" },
+      { label: "Awards", value: "1 Won" },
+    ],
+  },
+
+  {
+    slug: "art-gallery",
+    title: "Art Gallery",
+    location: "Ahmedabad, India",
+    category: "Cultural",
+    year: "2025",
+    area: "18,000 sq ft",
+    status: "Completed",
+    description:
+      "A contemporary gallery space designed around light, shadow and movement.",
+    longDescription:
+      "The gallery creates a neutral backdrop for exhibitions while using natural light as a primary architectural material.",
+    tags: ["Gallery", "Culture", "Exhibition", "Public"],
+    image: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=2070&auto=format&fit=crop",
+    heroImage: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=2070&auto=format&fit=crop",
+    gallery: [
+      "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=2070&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?q=80&w=2070&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1459908676235-d5f02a50184b?q=80&w=2070&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1518998053901-5348d3961a04?q=80&w=2070&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1518998053901-5348d3961a04?q=80&w=2070&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1459908676235-d5f02a50184b?q=80&w=2070&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?q=80&w=2070&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=2070&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1518998053901-5348d3961a04?q=80&w=2070&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1459908676235-d5f02a50184b?q=80&w=2070&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?q=80&w=2070&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=2070&auto=format&fit=crop"
+    ],
+    stats: [
+      { label: "Area", value: "18,000 sq ft" },
+      { label: "Year", value: "2025" },
+      { label: "Galleries", value: "7" },
+      { label: "Visitors", value: "200k+/yr" },
+    ],
+  }
 ];

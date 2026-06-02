@@ -22,7 +22,8 @@ interface HexGalleryProps {
 
 export default function HexGallery({ images, onOpen }: HexGalleryProps) {
   const [hovered, setHovered] = useState<number | null>(null);
-  const imgs = images.slice(0, 6);
+  // const imgs = images.slice(0, 6);
+  const imgs = images;
 
   /* ── Geometry ── */
   // Large hex: flat-top, center (230, 255), R = 195
@@ -33,25 +34,43 @@ export default function HexGallery({ images, onOpen }: HexGalleryProps) {
 
   // Small hexes: R = 118, centers placed to match screenshot
   const smalls = [
-    { cx: 530, cy: 148 }, // top row
-    { cx: 736, cy: 148 },
-    { cx: 427, cy: 344 }, // bottom row
-    { cx: 633, cy: 344 },
-    { cx: 839, cy: 344 },
+    { cx: 510, cy: 140 },
+    { cx: 710, cy: 260 },
+    { cx: 510, cy: 370 },
+    { cx: 910, cy: 140 },
+    { cx: 910, cy: 370 },
+    { cx: 710, cy: 480 },
+    { cx: 1110, cy: 260 },
+    { cx: 1110, cy: 480 },
+    { cx: 1310, cy: 140 },
+    { cx: 1310, cy: 370 },
   ];
 
   const R_SM = 118;
-  const W = 900;
-  const H = 520;
+  const W = 1450;
+  const H = 650;
 
   return (
-    <div className="w-full overflow-x-auto" style={{ scrollbarWidth: "none" }}>
+    <div
+      className="
+        w-full
+        overflow-x-auto
+        overflow-y-hidden
+        pb-4
+        scrollbar-thin
+        scrollbar-thumb-white/10
+      "
+    >
       <svg
         viewBox={`0 0 ${W} ${H}`}
         width={W}
-        height={H}
+        height={650}
+        style={{
+          minWidth: W,
+          display: "block",
+        }}
         xmlns="http://www.w3.org/2000/svg"
-        style={{ display: "block", background: "#0a0a0a", borderRadius: "16px" }}
+      // style={{ display: "block", background: "#0a0a0a", borderRadius: "16px" }}
       >
         <defs>
           {/* Large hex clip */}
@@ -82,9 +101,16 @@ export default function HexGallery({ images, onOpen }: HexGalleryProps) {
               height={L.R * 2}
               clipPath="url(#hg-clip-0)"
               preserveAspectRatio="xMidYMid slice"
+              // style={{
+              //   filter: hovered === 0 ? "brightness(1.15)" : "brightness(0.85)",
+              //   transition: "filter 0.35s ease",
+              // }}
               style={{
-                filter: hovered === 0 ? "brightness(1.15)" : "brightness(0.85)",
-                transition: "filter 0.35s ease",
+                cursor: "pointer",
+                transform:
+                  hovered === 0 ? "scale(1.05)" : "scale(1)",
+                transformOrigin: `${L.cx}px ${L.cy}px`,
+                transition: "all .35s ease",
               }}
             />
             {/* Border */}
@@ -97,8 +123,31 @@ export default function HexGallery({ images, onOpen }: HexGalleryProps) {
             />
             {/* Hover expand icon */}
             {hovered === 0 && (
-              <text x={L.cx} y={L.cy + 10} textAnchor="middle"
-                fill="rgba(255,255,255,0.9)" fontSize={32} style={{ pointerEvents: "none" }}>⤢</text>
+              <foreignObject
+                x={L.cx - 24}
+                y={L.cy - 24}
+                width={48}
+                height={48}
+                style={{ overflow: "visible", pointerEvents: "none" }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: "48px",
+                    height: "48px",
+                    borderRadius: "9999px",
+                    border: "1px solid rgba(255,255,255,0.3)",
+                    background: "rgba(255,255,255,0.1)",
+                    backdropFilter: "blur(8px)",
+                    color: "#fff",
+                    fontSize: "24px",
+                  }}
+                >
+                  ⤢
+                </div>
+              </foreignObject>
             )}
           </g>
         )}
@@ -128,9 +177,15 @@ export default function HexGallery({ images, onOpen }: HexGalleryProps) {
                 height={h}
                 clipPath={`url(#hg-clip-${idx})`}
                 preserveAspectRatio="xMidYMid slice"
+                // style={{
+                //   filter: isH ? "brightness(1.15)" : "brightness(0.8)",
+                //   transition: "filter 0.35s ease",
+                // }}
                 style={{
-                  filter: isH ? "brightness(1.15)" : "brightness(0.8)",
-                  transition: "filter 0.35s ease",
+                  cursor: "pointer",
+                  transform: isH ? "scale(1.05)" : "scale(1)",
+                  transformOrigin: `${s.cx}px ${s.cy}px`,
+                  transition: "all .35s ease",
                 }}
               />
               <polygon
@@ -141,8 +196,31 @@ export default function HexGallery({ images, onOpen }: HexGalleryProps) {
                 style={{ transition: "all 0.3s ease" }}
               />
               {isH && (
-                <text x={s.cx} y={s.cy + 7} textAnchor="middle"
-                  fill="rgba(255,255,255,0.9)" fontSize={22} style={{ pointerEvents: "none" }}>⤢</text>
+                <foreignObject
+                  x={s.cx - 20}
+                  y={s.cy - 20}
+                  width={40}
+                  height={40}
+                  style={{ overflow: "visible", pointerEvents: "none" }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      width: "40px",
+                      height: "40px",
+                      borderRadius: "9999px",
+                      border: "1px solid rgba(255,255,255,0.3)",
+                      background: "rgba(255,255,255,0.1)",
+                      backdropFilter: "blur(8px)",
+                      color: "#fff",
+                      fontSize: "20px",
+                    }}
+                  >
+                    ⤢
+                  </div>
+                </foreignObject>
               )}
             </g>
           );
@@ -155,7 +233,7 @@ export default function HexGallery({ images, onOpen }: HexGalleryProps) {
             <stop offset="100%" stopColor="#0a0a0a" stopOpacity="1" />
           </linearGradient>
         </defs>
-        <rect x={820} y={0} width={80} height={H} fill="url(#hg-rfade)" style={{ pointerEvents: "none" }} />
+        {/* <rect x={820} y={0} width={80} height={H} fill="url(#hg-rfade)" style={{ pointerEvents: "none" }} /> */}
       </svg>
     </div>
   );
